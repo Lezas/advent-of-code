@@ -32,7 +32,7 @@ class DaysManager
             $inputFile = self::getDayDemoFile($day);
         }
 
-        self::runPuzzle($day, $part, $inputFile);
+        return self::runPuzzle($day, $part, $inputFile);
     }
 
     private static function runPuzzle(int $day, string $part, string $inputFile)
