@@ -1,0 +1,39 @@
+<?php
+
+namespace AdventOfCode\Year2021\Day5;
+
+use AdventOfCode\TestInterface;
+
+class PuzzleTest implements TestInterface
+{
+    public function testFirstPart(): iterable
+    {
+        yield '5' => <<<INPUT
+0,9 -> 5,9
+8,0 -> 0,8
+9,4 -> 3,4
+2,2 -> 2,1
+7,0 -> 7,4
+6,4 -> 2,0
+0,9 -> 2,9
+3,4 -> 1,4
+0,0 -> 8,8
+5,5 -> 8,2
+INPUT;
+    }
+    public function testSecondPart(): iterable
+    {
+        yield '12' => <<<INPUT
+0,9 -> 5,9
+8,0 -> 0,8
+9,4 -> 3,4
+2,2 -> 2,1
+7,0 -> 7,4
+6,4 -> 2,0
+0,9 -> 2,9
+3,4 -> 1,4
+0,0 -> 8,8
+5,5 -> 8,2
+INPUT;
+    }
+}

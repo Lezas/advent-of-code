@@ -209,8 +209,6 @@ class Puzzle implements PuzzleInterface
             }
         }
 
-        var_dump($sum);
-
         return $sum;
     }
 }

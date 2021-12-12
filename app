@@ -3,9 +3,9 @@
 
 require __DIR__.'/vendor/autoload.php';
 
-use AdventOfCode\DownloadPuzzleInputCommand;
-use AdventOfCode\GenerateDayPuzzleCommand;
-use AdventOfCode\RunDayPuzzleCommand;
+use AdventOfCode\Command\DownloadPuzzleInputCommand;
+use AdventOfCode\Command\GenerateDayPuzzleCommand;
+use AdventOfCode\Command\RunDayPuzzleCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Dotenv\Dotenv;
 

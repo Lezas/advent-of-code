@@ -1,10 +1,12 @@
 <?php
 
-namespace AdventOfCode;
+namespace AdventOfCode\Command;
 
-use AdventOfCode\Year2021\DayPuzzleGenerator;
+use AdventOfCode\API\AdventOfCodeAPI;
+use AdventOfCode\Factory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class DownloadPuzzleInputCommand extends Command
@@ -14,14 +16,19 @@ class DownloadPuzzleInputCommand extends Command
     protected function configure()
     {
         $this
-            ->addArgument('day');
+            ->addArgument('day')
+            ->addOption('year', 'y', InputOption::VALUE_REQUIRED);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $day = $input->getArgument('day');
+        $year = $input->getOption('year');
+        if (empty($year)) {
+            $year = (new \DateTime())->format('Y');
+        }
 
-        DayPuzzleGenerator::populateInputFile($day, AdventOfCodeAPI::getPuzzleInput(2021, $day));
+        Factory::getDayPuzzleGenerator($year)->populateInputFile($day, AdventOfCodeAPI::getPuzzleInput($year, $day));
 
         $output->writeln('Input file populated');
     }

@@ -114,7 +114,6 @@ class Puzzle implements PuzzleInterface
         }
     }
 
-
     public function secondPart(string $input)
     {
         $lines = explode("\n", trim($input));

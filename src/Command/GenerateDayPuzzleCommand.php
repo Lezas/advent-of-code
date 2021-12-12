@@ -1,8 +1,8 @@
 <?php
 
-namespace AdventOfCode;
+namespace AdventOfCode\Command;
 
-use AdventOfCode\Year2021\DayPuzzleGenerator;
+use AdventOfCode\Factory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,15 +16,20 @@ class GenerateDayPuzzleCommand extends Command
     {
         $this
             ->addArgument('day')
+            ->addOption('year', 'y', InputOption::VALUE_REQUIRED)
             ->addOption('force', 'f', InputOption::VALUE_NONE);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $year = $input->getOption('year');
+        if (empty($year)){
+            $year = (new \DateTime())->format('Y');
+        }
         $day = $input->getArgument('day');
         $force = $input->getOption('force');
 
-        DayPuzzleGenerator::generateDay($day, $force);
+        Factory::getDayPuzzleGenerator($year)->generateDay($day, $force);
 
         $output->writeln('Puzzle Generated');
     }
