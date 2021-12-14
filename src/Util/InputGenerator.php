@@ -6,6 +6,6 @@ class InputGenerator
 {
     public static function inputToLineGenerator(string $input): \Generator
     {
-        yield from explode("\n", trim($input));
+        yield from preg_split("/\R/", trim($input));
     }
 }

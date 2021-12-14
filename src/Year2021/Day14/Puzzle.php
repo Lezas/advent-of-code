@@ -43,106 +43,46 @@ class Puzzle implements PuzzleInterface
             $polymerLine = $newPolymerLine;
         }
 
-
         $counts = array_count_values($polymerLine);
-        sort($counts);
 
-        $last = array_pop($counts);
-        $least = array_shift($counts);
-
-        return $last - $least;
+        return max($counts) - min($counts);
     }
 
     public function secondPart(string $input)
     {
-        $polymerLine = null;
-        $newLine = null;
+        [$polymerLine, $rulesString] = preg_split("/\R\R/", $input);
+        $rules = [];
+
+        foreach (InputGenerator::inputToLineGenerator($rulesString) as $line) {
+            [$pair, $element] = explode(' -> ', $line);
+            $rules[$pair] = trim($element);
+        }
 
         $pairs = [];
 
-        foreach (InputGenerator::inputToLineGenerator($input) as $line) {
-            if (null === $polymerLine) {
-                $polymerLine = str_split(trim($line));
-                continue;
-            }
-            if (null === $newLine) {
-                $newLine = 1;
-                continue;
-            }
-            [$pair, $element] = explode(' -> ', $line);
-            $pairs[$pair] = trim($element);
-        }
+        $counts = array_count_values(str_split($polymerLine));
 
-        $counts = [];
-        $multipliers = [];
-
-        foreach ($polymerLine as $item) {
-            if (!isset($counts[$item])) {
-                $counts[$item] = 1;
-            } else {
-                $counts[$item] += 1;
-            }
-        }
-
-        $count = count($polymerLine);
+        $count = strlen($polymerLine);
         for ($i = 0; $i < ($count - 1); $i++) {
-            $charOne = $polymerLine[$i];
-            $charTwo = $polymerLine[$i + 1];
-            $comb = $charOne . $charTwo;
-            if (!isset($multipliers[$comb])) {
-                $multipliers[$comb] = [
-                    'multi' => 1,
-                    'char1' => $charOne,
-                    'char2' => $charTwo,
-                ];
-            } else {
-                $multipliers[$comb]['multi'] += 1;
-            }
+            $comb = $polymerLine[$i] . $polymerLine[$i + 1];
+            $pairs[$comb] = ($pairs[$comb] ?? 0) + 1;
         }
 
         $maxSteps = 40;
-        for ($step = 1; $step <= $maxSteps; $step++) {
-            $copy = $multipliers;
-            foreach ($copy as $multiplierChar => $settings) {
-                $char = $pairs[$multiplierChar];
+        while ($maxSteps--) {
+            foreach ($pairs as $pair => $count) {
+                $char = $rules[$pair];
+                $counts[$char] = ($counts[$char] ?? 0) + $count;
+                $pairs[$pair] = $pairs[$pair] - $count;
 
-                if (!isset($counts[$char])) {
-                    $counts[$char] = $settings['multi'];
-                } else {
-                    $counts[$char] += $settings['multi'];
-                }
+                $comb = $pair[0] . $char;
+                $pairs[$comb] = ($pairs[$comb] ?? 0) + $count;
 
-                $comb = $settings['char1'] . $char;
-                if (!isset($multipliers[$comb])) {
-                    $multipliers[$comb] = [
-                        'multi' => $settings['multi'],
-                        'char1' => $settings['char1'],
-                        'char2' => $char,
-                    ];
-                } else {
-                    $multipliers[$comb]['multi'] += $settings['multi'];
-                }
-
-                $comb =  $char . $settings['char2'];
-                if (!isset($multipliers[$comb])) {
-                    $multipliers[$comb] = [
-                        'multi' => $settings['multi'],
-                        'char1' => $char,
-                        'char2' => $settings['char2'],
-                    ];
-                } else {
-                    $multipliers[$comb]['multi'] += $settings['multi'];
-                }
-
-                $multipliers[$multiplierChar]['multi'] -= $settings['multi'];
+                $comb = $char . $pair[1];
+                $pairs[$comb] = ($pairs[$comb] ?? 0) + $count;
             }
         }
 
-        sort($counts);
-
-        $last = array_pop($counts);
-        $least = array_shift($counts);
-
-        return $last - $least;
+        return max($counts) - min($counts);
     }
 }
