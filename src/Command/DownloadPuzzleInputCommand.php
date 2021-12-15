@@ -16,6 +16,7 @@ class DownloadPuzzleInputCommand extends Command
     protected function configure()
     {
         $this
+            ->setAliases(['p:d:i'])
             ->addArgument('day')
             ->addOption('year', 'y', InputOption::VALUE_REQUIRED);
     }

@@ -15,6 +15,7 @@ class GenerateDayPuzzleCommand extends Command
     protected function configure()
     {
         $this
+            ->setAliases(['p:g'])
             ->addArgument('day')
             ->addOption('year', 'y', InputOption::VALUE_REQUIRED)
             ->addOption('force', 'f', InputOption::VALUE_NONE);

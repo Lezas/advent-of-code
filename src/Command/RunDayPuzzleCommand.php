@@ -18,6 +18,7 @@ class RunDayPuzzleCommand extends Command
     protected function configure()
     {
         $this
+            ->setAliases(['p:r'])
             ->addArgument('day')
             ->addArgument('part')
             ->addOption('year', null, InputOption::VALUE_REQUIRED)
