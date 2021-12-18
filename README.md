@@ -1,18 +1,18 @@
-#Advent Of Code solutions in PHP
+# Advent Of Code solutions in PHP
 Personal solutions and small framework to help to solve Advent Of Code puzzle.
 
-##Requirements
+## Requirements
 - PHP >=7.1.3
 - Composer
 
-##Installation
+## Installation
 
 - Clone repository
 - Run `composer install`
 - Create your locale `.env` file by copying `.end.dist`.
 - Pull adventofcode.com session token (You can use any modern browser developer tools) and update `AOC_SESSIONID` value in `.env` file
 
-##Usage
+## Usage
 All puzzles are placed under `src/YearX/DayX` structure.
 Each day has files:
 - Puzzle.php file, where first and second parts are solved separately.
@@ -26,7 +26,7 @@ Each day could follow this workflow to solve the puzzles:
 4. Optionally updating PuzzleTest with tests
 5. And then running the solution with command `app p:r <day> <part:first|second>`
 
-###Solve the puzzle:
+### Solve the puzzle:
 ````
 Usage:
  app puzzle:run [<day>] [<part>] [options]
@@ -46,7 +46,7 @@ Option --send
    With this option, result from the puzzle will be sent to adventofcode.com
    For this you must have updated .env file with session ID
 ````
-###Create structure for a given puzzle
+### Create structure for a given puzzle
 ````
 Usage:
  app puzzle:generate [<day>] [options]
@@ -59,7 +59,7 @@ Options:
      --year[=YEAR]     Year of the puzzle [default: current year]
      --force -f        Replace current structure with new one
 ````
-###Download puzzle input from adventofcode
+### Download puzzle input from adventofcode
 For command to work, you must have updated .env file with session ID
 ````
 Download puzzle input from adventofcode.com.
@@ -76,7 +76,7 @@ Options:
      --year[=YEAR] -y  Year of the puzzle [default: current year]
 ````
 
-###ToDo
+### ToDo
 - Fix the option to send the puzzle result to Advent Of Code
 - Add docker support
 - Update `puzzle:run` command to have shorter syntax when selecting part of the puzzle.
