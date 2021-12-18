@@ -9,7 +9,7 @@ Personal solutions and small framework to help to solve Advent Of Code puzzle.
 
 - Clone repository
 - Run `composer install`
-- Create your locale `.env` file by copying `.end.dist`.
+- Create your local `.env` file by copying `.end.dist` and removing `.dist` part.
 - Pull adventofcode.com session token (You can use any modern browser developer tools) and update `AOC_SESSIONID` value in `.env` file
 
 ## Usage
