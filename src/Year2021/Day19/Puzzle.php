@@ -23,33 +23,7 @@ class Puzzle implements PuzzleInterface
             }
         }
 
-        $initialScanner = $scanners[0];
-        $initialScanner->setAbsolutePoint(0, 0, 0);
-        $initialScanner->setAbsoluteOrder('x', 'y', 'z');
-        $initialScanner->setAbsoluteRotation(1, 1, 1);
-        /** @var Scanner[] $mappedScanners */
-        $mappedScanners = [];
-        $mappedScanners[0] = $initialScanner;
-        unset($scanners[0]);
-
-        while (!empty($scanners)) {
-            $found = false;
-            foreach ($scanners as $key => $scanner) {
-                foreach ($mappedScanners as $mappedKey => $mappedScanner) {
-                    if ($this->areBeaconsOverlapping($mappedScanner, $scanner)) {
-                        $mappedScanners[$key] = $scanner;
-                        unset($scanners[$key]);
-
-                        $found = true;
-                    }
-                }
-            }
-
-            if (!$found && count($scanners) > 0) {
-                echo 'Something went wrong, did not find any scanners but there are in the queue' . PHP_EOL;
-                exit();
-            }
-        }
+        $mappedScanners = $this->mappScanners($scanners);
 
         $points = [];
 
@@ -78,13 +52,12 @@ class Puzzle implements PuzzleInterface
 
     public function secondPart(string $input)
     {
-
-        $scannerInput = preg_split("/\R\R/", trim($input));
+        $scannersInput = preg_split("/\R\R/", trim($input));
         /** @var Scanner[] $scanners */
         $scanners = [];
 
-        foreach ($scannerInput as $linesString) {
-            $lines = preg_split("/\R/", trim($linesString));
+        foreach ($scannersInput as $scannerInput) {
+            $lines = preg_split("/\R/", trim($scannerInput));
             $scanner = new Scanner();
             $scanners[] = $scanner;
             $count = count($lines);
@@ -94,38 +67,11 @@ class Puzzle implements PuzzleInterface
             }
         }
 
-        $initialScanner = $scanners[0];
-        $initialScanner->setAbsolutePoint(0, 0, 0);
-        $initialScanner->setAbsoluteOrder('x', 'y', 'z');
-        $initialScanner->setAbsoluteRotation(1, 1, 1);
-        /** @var Scanner[] $mappedScanners */
-        $mappedScanners = [];
-        $mappedScanners[0] = $initialScanner;
-        unset($scanners[0]);
-
-        while (!empty($scanners)) {
-            $found = false;
-            foreach ($scanners as $key => $scanner) {
-                foreach ($mappedScanners as $mappedKey => $mappedScanner) {
-                    if ($this->areBeaconsOverlapping($mappedScanner, $scanner)) {
-                        $mappedScanners[$key] = $scanner;
-                        unset($scanners[$key]);
-
-                        $found = true;
-                    }
-                }
-            }
-
-            if (!$found && count($scanners) > 0) {
-                echo 'Something went wrong, did not find any scanners but there are in the queue' . PHP_EOL;
-                exit();
-            }
-        }
-
+        $mappedScanners = $this->mappScanners($scanners);
         $maxDistance = 0;
         $count = count($mappedScanners);
-        for ($i=0; $i< ($count - 1); $i++) {
-            for ($j = $i+1; $j< ($count);$j++){
+        for ($i = 0; $i < ($count - 1); $i++) {
+            for ($j = $i + 1; $j < ($count); $j++) {
                 $scanner1 = $mappedScanners[$i];
                 $scanner2 = $mappedScanners[$j];
                 $x = abs($scanner1->absolutePoint['x'] - $scanner2->absolutePoint['x']);
@@ -142,7 +88,40 @@ class Puzzle implements PuzzleInterface
         return $maxDistance;
     }
 
-    private function areBeaconsOverlapping(Scanner $mappedScanner, Scanner $scanner): bool
+    private function mappScanners(array $scanners): array
+    {
+        $initialScanner = $scanners[0];
+        $initialScanner->setAbsolutePoint(0, 0, 0);
+        $initialScanner->setAbsoluteOrder('x', 'y', 'z');
+        $initialScanner->setAbsoluteRotation(1, 1, 1);
+        /** @var Scanner[] $mappedScanners */
+        $mappedScanners = [];
+        $mappedScanners[0] = $initialScanner;
+        unset($scanners[0]);
+
+        while (!empty($scanners)) {
+            $found = false;
+            foreach ($scanners as $key => $scanner) {
+                foreach ($mappedScanners as $mappedKey => $mappedScanner) {
+                    if ($this->determineIfBeaconsOverlap($mappedScanner, $scanner)) {
+                        $mappedScanners[$key] = $scanner;
+                        unset($scanners[$key]);
+
+                        $found = true;
+                    }
+                }
+            }
+
+            if (!$found && count($scanners) > 0) {
+                echo 'Something went wrong, did not find any scanners but there are in the queue' . PHP_EOL;
+                exit();
+            }
+        }
+
+        return $mappedScanners;
+    }
+
+    private function determineIfBeaconsOverlap(Scanner $mappedScanner, Scanner $scanner): bool
     {
         foreach ($this->getPossibleOrders() as $possibleOrder) {
             foreach ($this->getPossibleRotations() as $possibleRotation) {
@@ -172,29 +151,25 @@ class Puzzle implements PuzzleInterface
                 }
                 $overLapFound = [
                     'x' => [
-                        'founded'  => false,
+                        'founded' => false,
                         'distance' => 0,
                     ],
                     'y' => [
-                        'founded'  => false,
+                        'founded' => false,
                         'distance' => 0,
                     ],
                     'z' => [
-                        'founded'  => false,
+                        'founded' => false,
                         'distance' => 0,
                     ],
                 ];
                 foreach ($distancesCount as $axis => $counts) {
-                    $newCounts = [];
                     foreach ($counts as $distance => $count) {
                         if ($count >= 12) {
-                            $newCounts[$distance] = $count;
                             $overLapFound[$axis]['founded'] = true;
                             $overLapFound[$axis]['distance'] = $distance;
                         }
-
                     }
-                    $distancesCount[$axis] = $newCounts;
                 }
 
                 if (
@@ -202,15 +177,18 @@ class Puzzle implements PuzzleInterface
                     && $overLapFound['y']['founded'] === true
                     && $overLapFound['z']['founded'] === true
                 ) {
-                    $scanner->setAbsoluteRotation($possibleRotation['x'], $possibleRotation['y'],
-                        $possibleRotation['z']);
+                    $scanner->setAbsoluteRotation(
+                        $possibleRotation['x'],
+                        $possibleRotation['y'],
+                        $possibleRotation['z']
+                    );
 
                     $scanner->setAbsoluteOrder($possibleOrder['x'], $possibleOrder['y'], $possibleOrder['z']);
                     $scanner->setAbsolutePoint(
                         $mappedScanner->absolutePoint['x'] + $overLapFound['x']['distance'],
                         $mappedScanner->absolutePoint['y'] + $overLapFound['y']['distance'],
                         $mappedScanner->absolutePoint['z'] + $overLapFound['z']['distance']
-                   );
+                    );
 
                     return true;
                 }
