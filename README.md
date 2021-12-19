@@ -26,6 +26,7 @@ Each day could follow this workflow to solve the puzzles:
 4. Optionally updating PuzzleTest with tests
 5. And then running the solution with command `app p:r <day> <part:first|second>`
 
+## Commands
 ### Solve the puzzle:
 ````
 Usage:
