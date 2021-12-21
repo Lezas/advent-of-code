@@ -6,6 +6,8 @@ use AdventOfCode\PuzzleInterface;
 
 class Puzzle implements PuzzleInterface
 {
+    private $memory = [];
+
     public function firstPart(string $input)
     {
         $players = preg_split('|\R|', $input);
@@ -66,6 +68,12 @@ class Puzzle implements PuzzleInterface
 
     public function roll(array $positions, array $scores, int $player = 0): array
     {
+        $hash = serialize(func_get_args());
+
+        if (isset($this->memory[$hash])) {
+            return $this->memory[$hash];
+        }
+
         $newPositions = $positions;
         $newScores = $scores;
         $wins = [0, 0];
@@ -83,6 +91,8 @@ class Puzzle implements PuzzleInterface
                 $wins[1] += $player2Wins * $frequency;
             }
         }
+
+        $this->memory[$hash] = $wins;
 
         return $wins;
     }
