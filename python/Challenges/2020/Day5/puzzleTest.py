@@ -1,36 +1,27 @@
 class PuzzleTest:
     def test_first_part():
-        yield {'result': 357, 'test_input': """
-FBFBBFFRLR
-"""
-               }
-        yield {'result': 567, 'test_input': """
-BFFFBBFRRR
-"""
-               }
-        yield {'result': 119, 'test_input': """
-FFFBBBFRRR
-"""
-               }
-        yield {'result': 820, 'test_input': """
-BBFFBBFRLL
+        yield {'result': 4, 'test_input': """
+light red bags contain 1 bright white bag, 2 muted yellow bags.
+dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+bright white bags contain 1 shiny gold bag.
+muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+faded blue bags contain no other bags.
+dotted black bags contain no other bags.
 """
                }
 
     def test_second_part():
-        yield {'result': 4, 'test_input': """
-pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
-hcl:#623a2f
-
-eyr:2029 ecl:blu cid:129 byr:1989
-iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
-
-hcl:#888785
-hgt:164cm byr:2001 iyr:2015 cid:88
-pid:545766238 ecl:hzl
-eyr:2022
-
-iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
+        yield {'result': 126, 'test_input': """
+shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.
         """
                }
 
