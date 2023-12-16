@@ -1,6 +1,5 @@
-from itertools import combinations
-import math
 import re
+from functools import lru_cache
 
 
 class Puzzle:
@@ -25,9 +24,9 @@ class Puzzle:
                     possible.append(combination)
 
             suma += len(possible)
-            print(configuration['conditions'], configuration['springs_count_string'], possible)
 
         return suma
+
     def get_springs_count(self, springs_string):
         groups = springs_string.split('.')
         counts = []
@@ -51,5 +50,62 @@ class Puzzle:
         return possible_conditions
 
     def second_part(self, input_string: str):
+        # print(read_input(input_string))
+        # exit()
+        springs = []
+        for value in [a.split(' ') for a in input_string.split('\n')]:
+            springs.append(
+                {
+                    'conditions': '?'.join([value[0] for _ in range(5)]),
+                    'springs_count':  tuple(map(int,(','.join([value[1] for _ in range(5)])).split(','))),
+                    # 'springs_count': [int(value) for value in value[1].split(',')] * 5,
+                    'springs_count_string': ','.join([value[1] for _ in range(5)]),
+                }
+            )
+
+        suma = 0
+        for configuration in springs:
+            counter = count_combinations(configuration['conditions'], configuration['springs_count'])
+            suma += counter
 
         return suma
+
+
+@lru_cache()
+def count_combinations(record, damages):
+    def more_damaged_springs(): return len(damages) > 1
+
+    def found_damaged_springs():
+        return re.findall(r'^[\#\?]{%i}' % next_grp, record)
+
+    def valid_next_spring(): return not(
+        (len(record) < next_grp + 1) or record[next_grp] == '#')
+
+    if not damages:
+        return 0 if '#' in record else 1
+
+    if not record:
+        return 0
+
+    result = 0
+    next_ch = record[0]
+    next_grp = damages[0]
+
+    if next_ch == '#':
+        if found_damaged_springs():
+            if more_damaged_springs():
+                if valid_next_spring():
+                    result += count_combinations(record[next_grp + 1:], damages[1:])
+                else:
+                    return 0
+            else:
+                result += count_combinations(record[next_grp:], damages[1:])
+
+    elif next_ch == '.':
+        result += count_combinations(record[1:], damages)
+
+    elif next_ch == '?':
+        result += count_combinations(record.replace('?', '#', 1), damages) + \
+                  count_combinations(record.replace('?', '.', 1), damages)
+
+    return result
