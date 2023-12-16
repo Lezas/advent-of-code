@@ -1,6 +1,6 @@
 class PuzzleTest:
     def test_first_part():
-        yield {'result': 21, 'test_input': """
+        yield {'result': 405, 'test_input': """
 #.##..##.
 ..#.##.#.
 ##......#

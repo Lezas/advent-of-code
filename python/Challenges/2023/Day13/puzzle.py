@@ -3,37 +3,34 @@ import math
 import re
 
 
-def find_reflection_in_string(input_string):
-    length = len(input_string)
-
-    for start_pos in range(length - 1):
-        for refl_len in range(1, min(length - start_pos, start_pos + 2)):
-            if input_string[start_pos:start_pos + refl_len] == input_string[-refl_len:][::-1]:
-                print(input_string, input_string[start_pos:start_pos + refl_len], input_string[-refl_len:][::-1])
-                return True, start_pos, refl_len
-
-    return False, 0, 0
-
+def distance(l: str, r: str) -> int:
+    return sum(a != b for a, b in zip(l, r))
 
 class Puzzle:
+
+    def count_reflection_index(self, map: list[str]):
+        for id in range(len(map)):
+            if id == 0:
+                continue
+
+            if sum(distance(l, r) for l, r in zip(reversed(map[:id]), map[id:])) == 1:
+                return id
+        return 0
 
     def first_part(self, input_string: str):
         maps = [a.split('\n') for a in input_string.split('\n\n')]
         print(maps)
-
+        print([a for a in reversed(maps)])
+        suma = 0
         for map in maps:
-            # print([''.join(row) for row in zip(*map)])
-            mirror_keys = []
-            print(map)
-            # print(len(map))
-            for row_key in range(2, len(map) - 2):
-                print('comparing:', row_key)
-                print(map[row_key], map[row_key + 1])
-                print(map[row_key - 1], map[row_key + 2])
-                if (map[row_key] == map[row_key + 1] and
-                        map[row_key - 1] == map[row_key + 2]):
-                    mirror_keys.append(row_key)
-            print('keys:', mirror_keys)
+            if id := self.count_reflection_index(map):
+                suma += id * 100
+                continue
+
+            if id := self.count_reflection_index(list(zip(*map))):
+                print('vertical', '\n'.join(map), id)
+                suma += id
+
         return suma
 
     def second_part(self, input_string: str):
