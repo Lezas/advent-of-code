@@ -22,7 +22,7 @@ hdj{m>838:A,pv}
                }
 
     def test_second_part():
-        yield {'result': 281, 'test_input': """
+        yield {'result': 167409079868000, 'test_input': """
 px{a<2006:qkq,m>2090:A,rfg}
 pv{a>1716:R,A}
 lnx{m>1548:A,A}
