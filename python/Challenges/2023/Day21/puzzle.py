@@ -10,14 +10,11 @@ class Puzzle:
                 if char == 'S':
                     center_position = (row_key, column_key)
 
-        print(center_position)
-
         paths = {
             center_position: center_position,
         }
 
         for i in range(64):
-            print(i, len(paths), end='\r')
             new_paths = {}
 
             for path in paths:
@@ -39,8 +36,6 @@ class Puzzle:
                     new_paths[new_current] = new_current
 
             paths = new_paths
-
-        print(i, len(paths))
 
         return len(paths)
 
