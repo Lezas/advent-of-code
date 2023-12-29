@@ -1,3 +1,5 @@
+import sympy
+
 class Puzzle:
     def first_part(self, input_string: str):
         values = [a.split(' @ ') for a in input_string.split('\n')]
@@ -25,6 +27,42 @@ class Puzzle:
 
     def second_part(self, input_string: str):
 
+        values = [a.split(' @ ') for a in input_string.split('\n')]
+        hails = []
+        for current_pos, velocity in values:
+            position = tuple(map(int, current_pos.split(', ')))
+            velocity = tuple(map(int, velocity.split(', ')))
+            hails.append({'position': position, 'velocity': velocity})
+
+        xr, yr, zr, vxr, vyr, vzr = sympy.symbols("xr, yr, zr, vxr, vyr, vzr")
+        equations = []
+
+        for i in range(len(hails)):
+            for j in range(i + 1, len(hails)):
+                equations.append(
+                    (xr - hails[i]['position'][0]) * (hails[i]['velocity'][1] - vyr)
+                    - (yr - hails[i]['position'][1]) * (hails[i]['velocity'][0] - vxr)
+                )
+                equations.append(
+                    (yr - hails[i]['position'][1]) * (hails[i]['velocity'][2] - vzr)
+                    - (zr - hails[i]['position'][2]) * (hails[i]['velocity'][1] - vyr)
+                )
+                equations.append(
+                    (xr - hails[j]['position'][0]) * (hails[j]['velocity'][1] - vyr)
+                    - (yr - hails[j]['position'][1]) * (hails[j]['velocity'][0] - vxr)
+                )
+                equations.append(
+                    (yr - hails[j]['position'][1]) * (hails[j]['velocity'][2] - vzr)
+                    - (zr - hails[j]['position'][2]) * (hails[j]['velocity'][1] - vyr)
+                )
+
+                ans = sympy.solve(equations)
+                if all(x % 1 == 0 for solution in ans for x in solution.values()):
+                    ans = ans[0]
+                    print(ans[xr] + ans[yr] + ans[zr])
+                    return ans[xr] + ans[yr] + ans[zr]
+
+                    break
         return 0
 
 
