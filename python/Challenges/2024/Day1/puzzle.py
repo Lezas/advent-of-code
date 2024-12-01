@@ -14,7 +14,6 @@ class Puzzle:
         sl.sort()
 
         for row_number in range(len(fl)):
-            print(row_number)
             suma += abs(int(sl[row_number]) - int(fl[row_number]))
 
         return suma
